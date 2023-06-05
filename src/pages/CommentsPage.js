@@ -3,29 +3,18 @@ import { BASE_URL } from "../constants/constants";
 import axios from "axios";
 import {Title,PostContainer } from '../style'
 import { Card } from '../components/Card/Card'
+import { useRequestData } from "../Hooks/useRequestData";
 
 
 const  CommentsPage = () => {
-  const [postagens, setPostagens] = useState([]);
-
-
-  useEffect(() => {
-    axios
-      .get(`${BASE_URL}comments`)
-      .then((response) => {
-        setPostagens(response.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, []);
-
+  const [postagens,isLoading,error] = useRequestData(`${BASE_URL}comments`,[])
   return (
     <div>
       <Title>Comentários dos usuários</Title>
       <PostContainer>
-
-      {postagens.map((post) => {
+      {isLoading && <h1>Carregando...</h1>}
+      {error && <h1>Ocorreu algum erro.</h1>}
+      {!isLoading && postagens.map((post) => {
         //console.log(post);
         return(
           <Card 
